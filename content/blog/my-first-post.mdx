@@ -1,0 +1,32 @@
+---
+title: "Building a Retro OS Portfolio"
+date: "2026-03-14"
+description: "How I built a Windows 95-style portfolio using Next.js, TypeScript, and TailwindCSS."
+---
+
+# Building a Retro OS Portfolio
+
+Ever wanted your portfolio to feel like booting up a classic operating system? That's exactly what I built.
+
+## The Stack
+
+- **Next.js App Router** for the framework
+- **TypeScript** for type safety
+- **TailwindCSS** for styling
+- **MDX** for blog posts like this one
+
+## Window Management
+
+The core challenge was building a window management system from scratch. Each window tracks its own position, size, z-index, and minimized state. The entire system runs through a React context with a reducer pattern.
+
+## What I Learned
+
+Building this taught me a lot about:
+
+1. **Drag and drop** — handling mouse events at the document level
+2. **Z-index management** — monotonically increasing counters work great
+3. **State machines** — reducers are perfect for complex UI state
+
+## What's Next
+
+I plan to add more interactive elements like a terminal emulator and a file system browser. Stay tuned!

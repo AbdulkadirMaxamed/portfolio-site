@@ -1,26 +1,253 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --pop-bg-dark: #1a1a2e;
+  --pop-panel: #2d2d2d;
+  --pop-panel-hover: #3d3d3d;
+  --pop-accent: #48b9c7;
+  --pop-accent-hover: #5ccbd8;
+  --pop-warm: #ffd085;
+  --pop-text: #f0f0f0;
+  --pop-text-dim: #999999;
+  --pop-surface: #383838;
+  --pop-border: #4a4a4a;
+  --pop-window-bg: #f5f5f5;
+  --pop-danger: #e95420;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--pop-bg-dark);
+  color: var(--pop-text);
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  cursor: default;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Window animations ──────────────────────────────── */
+
+@keyframes win-open {
+  0% {
+    opacity: 0;
+    transform: scale(0.92) translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes win-close {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.92) translateY(8px);
+  }
+}
+
+@keyframes win-minimize {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.4) translateY(80vh);
+  }
+}
+
+@keyframes win-restore {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) translateY(80vh);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-win-open {
+  animation: win-open 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-win-close {
+  animation: win-close 0.15s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+  pointer-events: none;
+}
+
+.animate-win-minimize {
+  animation: win-minimize 0.25s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
+  pointer-events: none;
+}
+
+.animate-win-restore {
+  animation: win-restore 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Lock screen animations ─────────────────────────── */
+
+@keyframes lock-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lock-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes lock-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes desktop-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-lock-fade-in {
+  animation: lock-fade-in 0.4s ease-out forwards;
+}
+
+.animate-lock-slide-up {
+  animation: lock-slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-lock-pulse {
+  animation: lock-pulse 2s ease-in-out infinite;
+}
+
+.animate-desktop-enter {
+  animation: desktop-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Modern scrollbar ─────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Light content area scrollbar */
+.light-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.light-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* ── MDX prose ──────────────────────────────────────── */
+
+.prose-retro h1 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 16px 0 10px;
+  color: #1a1a1a;
+}
+
+.prose-retro h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--pop-accent);
+  margin: 14px 0 8px;
+}
+
+.prose-retro h3 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px 0 6px;
+  color: #333;
+}
+
+.prose-retro p {
+  margin: 8px 0;
+  line-height: 1.6;
+  color: #444;
+}
+
+.prose-retro ul,
+.prose-retro ol {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.prose-retro li {
+  margin: 4px 0;
+  color: #444;
+}
+
+.prose-retro code {
+  background: #e8e8e8;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  font-size: 13px;
+}
+
+.prose-retro pre {
+  background: #1e1e2e;
+  color: #cdd6f4;
+  padding: 12px 16px;
+  margin: 10px 0;
+  overflow-x: auto;
+  font-family: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+  font-size: 13px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.prose-retro strong {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.prose-retro a {
+  color: #0d7377;
+  text-decoration: underline;
+  text-decoration-color: rgba(13, 115, 119, 0.3);
+  text-underline-offset: 2px;
+}
+
+.prose-retro a:hover {
+  text-decoration-color: rgba(13, 115, 119, 0.8);
+}
+
+.prose-retro hr {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 16px 0;
 }
