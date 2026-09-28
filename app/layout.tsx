@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
-import { Bungee } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-export const bungee = Bungee({
-  weight: "400",
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-bungee",
+  variable: "--font-inter",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
   title: "Portfolio OS",
-  description: "A Pop!_OS inspired desktop portfolio",
+  description: "A personal desktop-OS style developer portfolio",
 };
 
 export default function RootLayout({
@@ -19,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={bungee.variable}>
+    <html lang="en" className={`${inter.variable} ${mono.variable}`} suppressHydrationWarning>
       <body className="overflow-hidden">{children}</body>
     </html>
   );

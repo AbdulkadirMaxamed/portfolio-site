@@ -1,30 +1,75 @@
 @import "tailwindcss";
 
+/* Height-based variants for short screens (laptops, landscape tablets) */
+@custom-variant short (@media (max-height: 860px));
+@custom-variant shorter (@media (max-height: 720px));
+
 :root {
-  --pop-bg-dark: #1a1a2e;
-  --pop-panel: #2d2d2d;
-  --pop-panel-hover: #3d3d3d;
-  --pop-accent: #48b9c7;
-  --pop-accent-hover: #5ccbd8;
-  --pop-warm: #ffd085;
-  --pop-text: #f0f0f0;
-  --pop-text-dim: #999999;
-  --pop-surface: #383838;
-  --pop-border: #4a4a4a;
-  --pop-window-bg: #f5f5f5;
-  --pop-danger: #e95420;
+  /* Portfolio OS design tokens (sampled from /new-design) */
+  --os-accent: #ff5a1f;
+  --os-accent-hover: #ff6d38;
+  --os-accent-soft: rgba(255, 106, 51, 0.16);
+  --os-dot: #f48c30;
+
+  --os-topbar: rgba(10, 10, 24, 0.78);
+  --os-dock: rgba(22, 16, 22, 0.66);
+
+  /* Dark, warm, translucent window surfaces */
+  --os-surface: rgba(30, 22, 26, 0.95);
+  --os-surface-deep: rgba(24, 20, 26, 0.92);
+  --os-sidebar: rgba(46, 30, 30, 0.97);
+  --os-titlebar: rgba(38, 30, 36, 0.94);
+  --os-hairline: rgba(255, 255, 255, 0.08);
+  --os-selected-dark: rgba(255, 110, 70, 0.22);
+
+  /* Warm light content surfaces */
+  --os-paper: #f8f6f2;
+  --os-paper-2: #f4f1ec;
+  --os-card-border: #ece8e2;
+  --os-ink: #1d1b20;
+  --os-ink-2: #4a4c52;
+  --os-ink-3: #8a8580;
+
+  --font-sans-stack: var(--font-inter), "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono-stack: var(--font-mono), "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
 body {
-  background: var(--pop-bg-dark);
-  color: var(--pop-text);
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #120e1a;
+  color: #f4f1ee;
+  font-family: var(--font-sans-stack);
   margin: 0;
   padding: 0;
   overflow: hidden;
   cursor: default;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.font-mono {
+  font-family: var(--font-mono-stack);
+}
+
+/* ── Window frame ───────────────────────────────────── */
+
+.os-window {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.42), 0 2px 10px rgba(0, 0, 0, 0.25);
+  transition: box-shadow 0.2s ease;
+}
+
+.os-window[data-active] {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.os-glass {
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+  backdrop-filter: blur(28px) saturate(140%);
+}
+
+.text-shadow-desktop {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85), 0 0 12px rgba(0, 0, 0, 0.35);
 }
 
 /* ── Window animations ──────────────────────────────── */
@@ -168,6 +213,92 @@ body {
 
 .light-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* ── Writing reader prose (dark) ────────────────────── */
+
+.prose-os {
+  color: rgba(244, 238, 234, 0.86);
+  font-size: 16.5px;
+  line-height: 1.5;
+}
+
+.prose-os > div > h1:first-child {
+  display: none;
+}
+
+.prose-os h1,
+.prose-os h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  margin: 22px 0 8px;
+}
+
+.prose-os h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin: 18px 0 6px;
+}
+
+.prose-os p {
+  margin: 0 0 20px;
+}
+
+.prose-os ul,
+.prose-os ol {
+  margin: 0 0 20px;
+  padding-left: 22px;
+  list-style: disc;
+}
+
+.prose-os ol {
+  list-style: decimal;
+}
+
+.prose-os li {
+  margin: 4px 0;
+}
+
+.prose-os strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.prose-os a {
+  color: #ff8a5c;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.prose-os code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-family: var(--font-mono-stack);
+  font-size: 14px;
+}
+
+.prose-os pre {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 12px 16px;
+  margin: 0 0 20px;
+  overflow-x: auto;
+  border-radius: 10px;
+  font-size: 14px;
 }
 
 /* ── MDX prose ──────────────────────────────────────── */

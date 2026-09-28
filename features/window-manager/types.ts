@@ -18,6 +18,10 @@ export interface WindowState {
   icon: string;
   position: WindowPosition;
   size: WindowSize;
+  /** Size the app asked for (design size); `size` is this fitted to the viewport */
+  preferredSize: WindowSize;
+  /** Set once the user drags the window, so viewport changes don't re-centre it */
+  userMoved: boolean;
   zIndex: number;
   isMinimized: boolean;
   animationState: WindowAnimationState;
@@ -39,4 +43,5 @@ export type WindowManagerAction =
   | { type: "RESTORE_WINDOW"; payload: { id: WindowId } }
   | { type: "SET_ANIMATION_STATE"; payload: { id: WindowId; animationState: WindowAnimationState } }
   | { type: "MOVE_WINDOW"; payload: { id: WindowId; position: WindowPosition } }
+  | { type: "FIT_TO_VIEWPORT" }
   | { type: "CLOSE_ACTIVE_WINDOW" };

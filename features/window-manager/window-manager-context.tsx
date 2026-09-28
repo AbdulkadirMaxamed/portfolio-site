@@ -9,35 +9,67 @@ import type {
   WindowSize,
 } from "./types";
 
-const CASCADE_STEP = 30;
-const TASKBAR_HEIGHT = 30;
+const CASCADE_STEP = 28;
+/** Height of the GNOME-style top bar (desktop area starts below it) */
+export const TOP_BAR_HEIGHT = 40;
+/** Space reserved at the bottom of the desktop for the dock when centring windows */
+export const DOCK_RESERVE = 92;
+/**
+ * Windows may not extend further down than this distance from the bottom of
+ * the desktop area, so their content never disappears behind the dock.
+ * (The design lets windows overlap the dock by ~12px.)
+ */
+const DOCK_CLEARANCE = 112;
+const EDGE_GAP = 8;
 
-function getResponsiveDefaults(): WindowSize {
-  if (typeof window === "undefined") return { width: 700, height: 500 };
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-  if (vw < 640) return { width: vw - 16, height: vh - TASKBAR_HEIGHT - 60 };
-  if (vw < 1024) return { width: Math.min(600, vw - 40), height: Math.min(450, vh - 80) };
-  return { width: 700, height: 500 };
+function getDesktopArea(): { width: number; height: number } {
+  if (typeof window === "undefined") return { width: 1586, height: 952 };
+  return { width: window.innerWidth, height: window.innerHeight - TOP_BAR_HEIGHT };
 }
 
-function getInitialPosition(windowCount: number): { x: number; y: number } {
-  if (typeof window === "undefined") return { x: 60, y: 60 };
-  const vw = window.innerWidth;
-  if (vw < 640) return { x: 8, y: 8 };
-  const offset = 40 + (windowCount % 6) * CASCADE_STEP;
-  return { x: offset, y: offset };
+/** Fit a preferred (design) size into the current desktop area. */
+function fitSize(preferred: WindowSize): WindowSize {
+  const area = getDesktopArea();
+  if (area.width < 640) return { width: area.width - 16, height: area.height - DOCK_RESERVE };
+  const width = Math.min(preferred.width, area.width - 24);
+  // A window narrower than its design width reflows taller, so let it grow
+  // (useful on portrait tablets) — still capped so it stays clear of the dock.
+  const reflowHeight = preferred.height * Math.min(1.6, preferred.width / width);
+  return {
+    width,
+    height: Math.max(320, Math.min(Math.round(reflowHeight), area.height - EDGE_GAP - DOCK_CLEARANCE)),
+  };
+}
+
+/** Centre a window in the free desktop area (above the dock), with an optional cascade offset. */
+function centredPosition(size: WindowSize, cascade = 0): { x: number; y: number } {
+  const area = getDesktopArea();
+  if (area.width < 640) return { x: 8, y: 8 };
+  const offset = (cascade % 5) * CASCADE_STEP;
+  const maxX = Math.max(EDGE_GAP, area.width - size.width - EDGE_GAP);
+  const maxY = Math.max(EDGE_GAP, area.height - DOCK_CLEARANCE - size.height);
+  const x = Math.round((area.width - size.width) / 2) + offset;
+  const y = Math.max(EDGE_GAP, Math.round((area.height - DOCK_RESERVE - size.height) / 2)) + offset;
+  return { x: Math.min(x, maxX), y: Math.min(y, maxY) };
+}
+
+/** Keep an existing (possibly user-moved) window fully reachable after a viewport change. */
+function keepInside(pos: { x: number; y: number }, size: WindowSize): { x: number; y: number } {
+  const area = getDesktopArea();
+  return {
+    x: Math.max(0, Math.min(pos.x, area.width - size.width)),
+    y: Math.max(0, Math.min(pos.y, area.height - size.height)),
+  };
 }
 
 function clampPosition(
   x: number,
   y: number,
-  width: number,
-  height: number
+  width: number
 ): { x: number; y: number } {
   if (typeof window === "undefined") return { x, y };
   const vw = window.innerWidth;
-  const vh = window.innerHeight - TASKBAR_HEIGHT;
+  const vh = window.innerHeight - TOP_BAR_HEIGHT;
   const minVisible = 80;
   return {
     x: Math.max(-width + minVisible, Math.min(x, vw - minVisible)),
@@ -64,6 +96,30 @@ function windowManagerReducer(
   switch (action.type) {
     case "OPEN_WINDOW": {
       const existing = state.windows.find((w) => w.id === action.payload.id);
+      if (existing && existing.animationState === "closing") {
+        // Re-opened while its close animation was still running: revive it
+        return {
+          ...state,
+          windows: state.windows.map((w) =>
+            w.id === existing.id
+              ? (() => {
+                  const size = fitSize(w.preferredSize);
+                  return {
+                    ...w,
+                    size,
+                    position: centredPosition(size),
+                    userMoved: false,
+                    animationState: "opening" as const,
+                    isMinimized: false,
+                    zIndex: state.nextZIndex,
+                  };
+                })()
+              : w
+          ),
+          activeWindowId: existing.id,
+          nextZIndex: state.nextZIndex + 1,
+        };
+      }
       if (existing) {
         let next = state;
         if (existing.isMinimized) {
@@ -72,12 +128,13 @@ function windowManagerReducer(
         return windowManagerReducer(next, { type: "FOCUS_WINDOW", payload: { id: action.payload.id } });
       }
 
-      const defaults = getResponsiveDefaults();
-      const size = {
-        width: action.payload.size?.width ?? defaults.width,
-        height: action.payload.size?.height ?? defaults.height,
+      const preferredSize: WindowSize = {
+        width: action.payload.size?.width ?? 900,
+        height: action.payload.size?.height ?? 600,
       };
-      const pos = getInitialPosition(state.windows.length);
+      const size = fitSize(preferredSize);
+      const visibleCount = state.windows.filter((w) => !w.isMinimized && w.animationState !== "closing").length;
+      const pos = centredPosition(size, visibleCount);
 
       return {
         ...state,
@@ -87,8 +144,10 @@ function windowManagerReducer(
             id: action.payload.id,
             title: action.payload.title,
             icon: action.payload.icon,
-            position: clampPosition(pos.x, pos.y, size.width, size.height),
+            position: pos,
             size,
+            preferredSize,
+            userMoved: false,
             zIndex: state.nextZIndex,
             isMinimized: false,
             animationState: "opening",
@@ -184,17 +243,24 @@ function windowManagerReducer(
     case "MOVE_WINDOW": {
       const win = state.windows.find((w) => w.id === action.payload.id);
       if (!win) return state;
-      const clamped = clampPosition(
-        action.payload.position.x,
-        action.payload.position.y,
-        win.size.width,
-        win.size.height
-      );
+      const clamped = clampPosition(action.payload.position.x, action.payload.position.y, win.size.width);
       return {
         ...state,
         windows: state.windows.map((w) =>
-          w.id === action.payload.id ? { ...w, position: clamped } : w
+          w.id === action.payload.id ? { ...w, position: clamped, userMoved: true } : w
         ),
+      };
+    }
+
+    case "FIT_TO_VIEWPORT": {
+      // Viewport resized / tablet rotated: re-fit every window to the new desktop area.
+      return {
+        ...state,
+        windows: state.windows.map((w) => {
+          const size = fitSize(w.preferredSize);
+          const position = w.userMoved ? keepInside(w.position, size) : centredPosition(size);
+          return { ...w, size, position };
+        }),
       };
     }
 
@@ -270,6 +336,21 @@ export function WindowManagerProvider({ children }: { children: ReactNode }) {
       dispatch({ type: "SET_ANIMATION_STATE", payload: { id, animationState } }),
     []
   );
+
+  useEffect(() => {
+    let frame = 0;
+    function handleResize() {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => dispatch({ type: "FIT_TO_VIEWPORT" }));
+    }
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {

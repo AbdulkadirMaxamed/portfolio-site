@@ -12,13 +12,17 @@ export default function Home() {
     setLocked(false);
   }, []);
 
+  const handleLock = useCallback(() => {
+    setLocked(true);
+  }, []);
+
   if (locked) {
     return <LockScreen onUnlock={handleUnlock} />;
   }
 
   return (
     <WindowManagerProvider>
-      <Desktop />
+      <Desktop onLock={handleLock} />
     </WindowManagerProvider>
   );
 }
