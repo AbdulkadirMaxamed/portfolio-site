@@ -8,24 +8,18 @@ import { SidebarItem } from "../ui/SidebarItem";
 import { projects, type Project } from "@/data/projects";
 import { useOpenApp } from "@/lib/useOpenApp";
 
-type Section = "home" | "projects" | "photos" | "archive" | "trash";
+type Section = "home" | "projects";
 
 const sidebar: { id: string; label: string; icon: string; section?: Section; app?: string }[] = [
   { id: "home", label: "Home", icon: "home-solid", section: "home" },
   { id: "projects", label: "Projects", icon: "folder-solid", section: "projects" },
   { id: "writing", label: "Writing", icon: "writing-solid", app: "writing" },
   { id: "cv", label: "CV", icon: "file-solid", app: "cv" },
-  { id: "photos", label: "Photos", icon: "image-solid", section: "photos" },
-  { id: "archive", label: "Archive", icon: "archive-solid", section: "archive" },
-  { id: "trash", label: "Trash", icon: "trash-solid", section: "trash" },
 ];
 
 const sectionTitle: Record<Section, string> = {
   home: "Home",
   projects: "Projects",
-  photos: "Photos",
-  archive: "Archive",
-  trash: "Trash",
 };
 
 function Folder({ size = 72 }: { size?: number }) {
@@ -65,16 +59,18 @@ function ProjectDetail({ project, inline = false }: { project: Project; inline?:
           </span>
         ))}
       </div>
-      <a
-        href={project.links.open ?? project.links.demo ?? "#"}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-[15px] h-[44px] w-[175px] rounded-[6px] flex items-center gap-3 pl-[18px] text-[16px] font-medium text-white hover:brightness-105"
-        style={{ background: "var(--os-accent)" }}
-      >
-        <Icon name="external-link" size={20} strokeWidth={1.8} />
-        Open
-      </a>
+      {(project.links.open ?? project.links.demo) && (
+        <a
+          href={project.links.open ?? project.links.demo}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-[15px] h-[44px] w-[175px] rounded-[6px] flex items-center gap-3 pl-[18px] text-[16px] font-medium text-white hover:brightness-105"
+          style={{ background: "var(--os-accent)" }}
+        >
+          <Icon name="external-link" size={20} strokeWidth={1.8} />
+          Open
+        </a>
+      )}
       <div className="mt-3 flex flex-wrap gap-x-[16px] gap-y-3">
         {project.links.demo && (
           <a
@@ -105,11 +101,11 @@ function ProjectDetail({ project, inline = false }: { project: Project; inline?:
   );
 }
 
-function EmptyFolder({ section }: { section: Section }) {
+function EmptyFolder() {
   return (
     <div className="h-full flex flex-col items-center justify-center text-center text-[#8a8580] gap-3 pb-10">
-      <Icon name={section === "trash" ? "trash" : "folder"} size={56} strokeWidth={1.2} className="text-[#c9c3bc]" />
-      <p className="text-[17px] font-medium text-[#55524f]">{section === "trash" ? "Trash is empty" : "This folder is empty"}</p>
+      <Icon name="folder" size={56} strokeWidth={1.2} className="text-[#c9c3bc]" />
+      <p className="text-[17px] font-medium text-[#55524f]">This folder is empty</p>
       <p className="text-[14px]">Nothing to see here yet.</p>
     </div>
   );
@@ -174,7 +170,7 @@ export function ProjectsContent({ initialSection = "projects" }: { initialSectio
       <div className="flex flex-1 min-h-0">
         {/* Sidebar */}
         <aside
-          className={`shrink-0 pt-[13px] space-y-[8px] os-glass ${rail ? "w-[64px] px-[10px]" : "w-[201px] px-[11px]"}`}
+          className={`shrink-0 pt-[13px] space-y-[8px] ${rail ? "w-[64px] px-[10px]" : "w-[201px] px-[11px]"}`}
           style={{ background: "var(--os-sidebar)" }}
         >
           {sidebar.map((item) => (
@@ -214,7 +210,7 @@ export function ProjectsContent({ initialSection = "projects" }: { initialSectio
 
           <div className="flex-1 overflow-auto light-scrollbar px-[20px] py-[18px]">
             {items.length === 0 ? (
-              <EmptyFolder section={section} />
+              <EmptyFolder />
             ) : view === "grid" ? (
               <div className="grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] gap-x-[14px] gap-y-[19px]">
                 {items.map((p) => {
@@ -224,7 +220,8 @@ export function ProjectsContent({ initialSection = "projects" }: { initialSectio
                       key={p.id}
                       onClick={() => setSelectedId(p.id)}
                       onDoubleClick={() => p.links.open && window.open(p.links.open, "_blank")}
-                      className="h-[188px] min-w-0 rounded-[10px] text-left px-[14px] pt-[30px] transition-colors"
+                      className="h-[188px] min-w-0 rounded-[10px] text-left px-[14px] pt-[22px] flex flex-col justify-start transition-colors"
+                      title={`${p.name} — ${p.stack}`}
                       style={{
                         background: isSel ? "#fdebe0" : "#f8f5f1",
                         border: `1.5px solid ${isSel ? "#fbb9a1" : "#efebe6"}`,
@@ -233,8 +230,8 @@ export function ProjectsContent({ initialSection = "projects" }: { initialSectio
                       <div className="flex justify-center">
                         <Folder />
                       </div>
-                      <div className="mt-[22px] text-[17px] font-semibold text-[#1d1b20] truncate">{p.name}</div>
-                      <div className="mt-[2px] text-[15px] tracking-[-0.015em] text-[#8a8580] truncate">{p.stack}</div>
+                      <div className="mt-[14px] text-[16.5px] leading-[1.25] font-semibold text-[#1d1b20] line-clamp-2">{p.name}</div>
+                      <div className="mt-[2px] text-[14px] leading-[1.3] tracking-[-0.015em] text-[#8a8580] line-clamp-2">{p.stack}</div>
                     </button>
                   );
                 })}
@@ -279,6 +276,3 @@ export function ProjectsContent({ initialSection = "projects" }: { initialSectio
   );
 }
 
-export function TrashContent() {
-  return <ProjectsContent initialSection="trash" />;
-}

@@ -1,5 +1,4 @@
-// Coffee data for the Brew app, lock screen widget and terminal.
-// PLACEHOLDER content — replace with your own bags and recipes.
+// Coffee data for the Brew app, lock screen widget, About/Now cards and terminal.
 
 import { images } from "./images";
 
@@ -11,60 +10,91 @@ export interface TastingNote {
 
 export interface CoffeeBag {
   name: string;
-  roaster: string;
-  process: string;
-  variety: string;
+  origin: string;
+  /** Rows shown next to the bag in the Brew app (label → value) */
+  details: { label: string; value: string }[];
   tastingNotes: TastingNote[];
-  /** 0–5 */
-  rating: number;
+  /** 0–5 — optional; the Rating row is hidden when not set */
+  rating?: number;
   image: string;
   quote?: string;
 }
 
 export interface BrewRecipe {
   method: string;
-  methodLong: string;
-  coffee: string;
-  water: string;
-  temperature: string;
-  time: string;
+  machine: string;
+  dose: string;
+  grind: string;
+  shotTime: string;
 }
 
-export const currentBag: CoffeeBag = {
-  name: "Ethiopia Guji",
-  roaster: "B&W Roasters",
-  process: "Washed",
-  variety: "Heirloom",
-  tastingNotes: [
-    { label: "Peach", icon: "🍑" },
-    { label: "Jasmine", icon: "🌸" },
-    { label: "Bergamot", icon: "🍋" },
-  ],
-  rating: 4,
-  image: images.coffee.currentBag,
-  quote: "Bright, floral, and a little bit of adventure in every cup.",
-};
-
 export const currentBrew: BrewRecipe = {
-  method: "V60",
-  methodLong: "V60 (Pour Over)",
-  coffee: "15g",
-  water: "250g",
-  temperature: "94°C",
-  time: "2:45",
+  method: "Espresso",
+  machine: "Breville Barista Express",
+  dose: "18g",
+  grind: "11",
+  shotTime: "34s",
 };
 
-export const coffeeHistory: Pick<CoffeeBag, "name" | "roaster" | "process" | "rating">[] = [
-  { name: "Ethiopia Guji", roaster: "B&W Roasters", process: "Washed", rating: 4 },
-  { name: "Colombia Huila", roaster: "Local Roastery", process: "Natural", rating: 4 },
-  { name: "Kenya Nyeri", roaster: "Square Mile", process: "Washed", rating: 5 },
+export const currentBag: CoffeeBag = {
+  name: "Nkora",
+  origin: "Colombia",
+  details: [
+    { label: "Origin", value: "Colombia" },
+    { label: "Machine", value: currentBrew.machine },
+    { label: "Grind", value: currentBrew.grind },
+  ],
+  tastingNotes: [
+    { label: "Honey", icon: "🍯" },
+    { label: "Chocolate", icon: "🍫" },
+    { label: "Roasted nuts", icon: "🌰" },
+  ],
+  image: images.coffee.currentBag,
+  quote: "Honey, chocolate and roasted nuts in every shot.",
+};
+
+/** The "My Brew" stats row in the Brew app */
+export const brewStats: { icon: string; value: string; label: string }[] = [
+  { icon: "cup", value: currentBrew.method, label: "Brew method" },
+  { icon: "bean", value: currentBrew.dose, label: "Coffee" },
+  { icon: "settings", value: currentBrew.grind, label: "Grind size" },
+  { icon: "timer", value: currentBrew.shotTime, label: "Shot time" },
 ];
 
-export const coffeeGear: string[] = ["Hario V60 02", "Comandante C40 grinder", "Fellow Stagg EKG kettle", "Acaia Pearl scale"];
+export interface CoffeeHistoryEntry {
+  name: string;
+  roaster?: string;
+  origin: string;
+  tastingNotes: string[];
+  grind?: string;
+  /** 0–5 — optional; stars are hidden when not set */
+  rating?: number;
+}
 
-export const coffeeMethods: string[] = ["V60", "AeroPress", "Chemex", "French Press"];
+/** Coffees I've had, most recent first (shown in the Brew app's History tab) */
+export const coffeeHistory: CoffeeHistoryEntry[] = [
+  {
+    name: currentBag.name,
+    origin: currentBag.origin,
+    tastingNotes: currentBag.tastingNotes.map((n) => n.label),
+    grind: currentBrew.grind,
+    rating: currentBag.rating,
+  },
+  {
+    name: "Murphy",
+    roaster: "Dugout Roastery",
+    origin: "Brazil – Nicaragua",
+    tastingNotes: ["Chocolate", "Nuts", "Caramel"],
+    grind: "10",
+    rating: 5,
+  },
+];
+
+export const coffeeGear: string[] = [currentBrew.machine];
+
+export const coffeeMethods: string[] = [currentBrew.method];
 
 export const coffeeNotes: string[] = [
-  "Grind a touch finer for lighter roasts.",
-  "Bloom for 40s with 2× the coffee weight in water.",
+  `Grind setting ${currentBrew.grind} on the ${currentBrew.machine}.`,
+  `${currentBrew.dose} dose, pulled for ${currentBrew.shotTime}.`,
 ];

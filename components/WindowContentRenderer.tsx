@@ -1,7 +1,7 @@
 "use client";
 
 import { AboutContent } from "./contents/AboutContent";
-import { ProjectsContent, TrashContent } from "./contents/ProjectsContent";
+import { ProjectsContent } from "./contents/ProjectsContent";
 import { BlogContent } from "./contents/BlogContent";
 import { CVContent } from "./contents/CVContent";
 import { BrewContent } from "./contents/BrewContent";
@@ -23,7 +23,6 @@ const contentMap: Record<string, React.ComponentType> = {
   cinema: CinemaContent,
   now: NowContent,
   terminal: TerminalContent,
-  trash: TrashContent,
 };
 
 export function WindowContentRenderer({ contentType }: WindowContentRendererProps) {

@@ -23,17 +23,16 @@ export const apps: Record<string, AppDefinition> = {
   cv: { id: "cv", label: "CV", contentType: "cv", icon: "cv", size: { width: 1018, height: 810 } },
   terminal: { id: "terminal", label: "Terminal", contentType: "terminal", icon: "terminal", size: { width: 826, height: 754 } },
   now: { id: "now", label: "Now", contentType: "now", icon: "now", size: { width: 1040, height: 760 } },
-  trash: { id: "trash", label: "Trash", contentType: "trash", icon: "trash", size: { width: 900, height: 560 } },
 };
 
 /** Desktop icon grid, row by row (3 columns) — matches the design layout */
 export const desktopApps: AppDefinition[] = [
   apps.about, apps.projects, apps.writing,
   apps.brew, apps.cinema, apps.cv,
-  apps.terminal, apps.now, apps.trash,
+  apps.terminal, apps.now,
 ];
 
 /** Dock order — matches the design */
 export const dockApps: AppDefinition[] = [
-  apps.about, apps.projects, apps.writing, apps.brew, apps.cinema, apps.cv, apps.terminal, apps.now, apps.trash,
+  apps.about, apps.projects, apps.writing, apps.brew, apps.cinema, apps.cv, apps.terminal, apps.now,
 ];

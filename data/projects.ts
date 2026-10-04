@@ -1,7 +1,4 @@
-// Projects shown in the Projects file manager and the terminal.
-// PLACEHOLDER content — replace with your own work.
-
-import { images } from "./images";
+// Projects shown in the Projects file manager and the terminal `projects` command.
 
 export interface Project {
   id: string;
@@ -20,53 +17,28 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: "portfolio-os",
-    name: "Portfolio OS",
-    stack: "Next.js, TypeScript",
+    id: "hooyos-recipe",
+    name: "Hooyo's Recipe",
+    stack: "React Router v7, Convex",
+    description: "A web app built with React Router v7 and Convex. Currently in progress.",
+    tags: ["React Router v7", "Convex"],
+    links: {},
+  },
+  {
+    id: "gradr",
+    name: "Gradr",
+    stack: "React Router v7, Convex",
     description:
-      "A retro desktop OS-style portfolio built with Next.js and TypeScript. A personal hub for my work, writing and experiments.",
-    tags: ["Next.js", "TypeScript", "TailwindCSS"],
-    image: images.projects.portfolioOs,
-    links: { open: "#", demo: "#", source: "https://github.com/you/portfolio-os" },
+      "An AI-powered platform that helps educators turn their teaching material into interactive assessments in minutes. Currently in progress.",
+    tags: ["React Router v7", "Convex", "AI"],
+    links: { open: "https://gradr.net/", demo: "https://gradr.net/" },
   },
   {
-    id: "task-manager",
-    name: "Task Manager",
-    stack: "React, Node.js",
-    description: "A full-stack task management application with real-time collaboration.",
-    tags: ["React", "Node.js", "PostgreSQL"],
-    links: { demo: "#", source: "#" },
-  },
-  {
-    id: "cli-tool",
-    name: "CLI Tool",
-    stack: "Rust",
-    description: "A developer productivity CLI tool for scaffolding projects.",
-    tags: ["Rust", "CLI"],
-    links: { source: "#" },
-  },
-  {
-    id: "ai-experiment",
-    name: "AI Experiment",
-    stack: "Python",
-    description: "Small experiments with language models and embeddings.",
-    tags: ["Python", "ML"],
-    links: { source: "#" },
-  },
-  {
-    id: "mobile-app",
-    name: "Mobile App",
+    id: "vivace",
+    name: "Vivace",
     stack: "React Native",
-    description: "A cross-platform mobile companion app.",
-    tags: ["React Native", "Expo"],
-    links: { demo: "#" },
-  },
-  {
-    id: "open-source",
-    name: "Open Source",
-    stack: "TypeScript",
-    description: "Contributions to open-source libraries and tooling.",
-    tags: ["TypeScript", "OSS"],
-    links: { source: "#" },
+    description: "A mobile app built with React Native. Currently in progress.",
+    tags: ["React Native", "Mobile"],
+    links: {},
   },
 ];

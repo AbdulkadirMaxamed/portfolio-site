@@ -162,14 +162,14 @@ function ContactPage() {
       </p>
       <h1 className="mt-3 text-[36px] leading-[1.17] font-bold text-[#1d1b20]">Get in touch</h1>
       <p className="mt-3 text-[17px] leading-[1.48] text-[#4a4c52]">
-        The best way to reach me is by email. I&apos;m also around on the usual places.
+        You can find my work on GitHub, or reach out to me on LinkedIn.
       </p>
       <div className="mt-6 space-y-3">
         {profile.socials.map((s) => (
           <a
             key={s.label}
             href={s.href}
-            target={s.kind === "email" ? undefined : "_blank"}
+            target="_blank"
             rel="noreferrer"
             className="flex items-center gap-4 h-[60px] px-5 rounded-[10px] border hover:bg-white transition-colors"
             style={{ background: "#fbfaf8", borderColor: "var(--os-card-border)" }}

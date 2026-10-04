@@ -1,9 +1,9 @@
 // CV / résumé content rendered by the CV document viewer.
-// PLACEHOLDER content taken from the design — replace with your own.
+// Source: Abdulkadir-Maxamed.pdf
 //
-// To offer your real PDF for download/print, drop it at
-//   public/cv/resume.pdf
-// and keep `pdfPath` pointing at it.
+// The downloadable PDF is generated from this same data by app/api/cv/route.ts,
+// so updating this file updates both the on-screen CV and the PDF.
+// (To serve a hand-made PDF instead, put it in public/cv/ and point `pdfPath` at it.)
 
 export interface CVExperience {
   role: string;
@@ -18,7 +18,7 @@ export interface CVEducation {
   school: string;
   period: string;
   location: string;
-  summary: string;
+  summary?: string;
 }
 
 export interface CVProject {
@@ -33,80 +33,114 @@ export interface CV {
   pdfPath: string;
   name: string;
   title: string;
+  /** Optional line under the title, e.g. degrees */
+  credentials?: string;
   summary: string;
   contacts: { kind: "email" | "phone" | "location" | "linkedin" | "github"; text: string; href?: string }[];
   experience: CVExperience[];
   education: CVEducation[];
   skills: { label: string; value: string }[];
   projects: CVProject[];
+  certifications: string[];
+  interests: string[];
+  references?: string;
 }
 
 export const cv: CV = {
-  fileName: "Resume.pdf",
-  pdfPath: "/cv/resume.pdf",
-  name: "Alex Morgan",
-  title: "Full-Stack Developer",
+  fileName: "Abdulkadir-Maxamed-CV.pdf",
+  pdfPath: "/api/cv",
+  name: "Abdulkadir Maxamed",
+  title: "Software Engineer",
+  credentials: "MSc Cyber Security & BSc Computer Science",
   summary:
-    "I build web applications with a focus on great user experience, clean code, and real-world impact. Passionate about creating tools that make people's lives easier.",
+    "Associate software engineer adept in bringing forth expertise in designing, implementing, and testing solutions according to client specifications. Able to efficiently self-manage during independent projects, as well as collaborate effectively as part of a productive team.",
   contacts: [
-    { kind: "email", text: "alex.morgan@example.com", href: "mailto:alex.morgan@example.com" },
-    { kind: "phone", text: "+1 (555) 123-4567" },
-    { kind: "location", text: "San Francisco, CA" },
-    { kind: "linkedin", text: "linkedin.com/in/alexmorgan", href: "https://linkedin.com/in/alexmorgan" },
-    { kind: "github", text: "github.com/alexmorgan", href: "https://github.com/alexmorgan" },
+    { kind: "email", text: "abdulkadir.q12@gmail.com", href: "mailto:abdulkadir.q12@gmail.com" },
+    { kind: "phone", text: "07393864922", href: "tel:+447393864922" },
+    { kind: "location", text: "Birmingham, West Midlands" },
+    { kind: "linkedin", text: "LinkedIn", href: "https://www.linkedin.com/in/abdulkadir-maxamed/" },
+    { kind: "github", text: "GitHub", href: "https://github.com/AbdulkadirMaxamed" },
   ],
   experience: [
     {
-      role: "Senior Full-Stack Developer",
-      company: "TechCorp",
-      period: "Jan 2022 – Present",
-      location: "San Francisco, CA",
+      role: "Founder",
+      company: "CodersIO",
+      period: "Aug 2022 – Present",
+      location: "London",
       bullets: [
-        "Developed and maintained scalable web applications using React, Node.js, and PostgreSQL.",
-        "Led a small team of engineers and collaborated with product designers to ship new features.",
-        "Improved application performance by 40% through optimization and caching strategies.",
+        "Scaling a small tech community to 400+ students.",
+        "Providing students with live lessons and resource material to assist them with learning coding languages.",
+        "Hosting several talks with established software engineers to inspire students with their journey in coding.",
+        "Mentoring students in the community by providing CV help and interview preparations.",
+        "Planning and executing marketing strategies in order to generate more sales.",
+        "Outreach and networking through B2B in order to provide additional branches of opportunities for students.",
       ],
     },
     {
-      role: "Full-Stack Developer",
-      company: "StartupCo",
-      period: "Jun 2019 – Dec 2021",
-      location: "Remote",
+      role: "Software Engineer",
+      company: "Capgemini",
+      period: "Nov 2021 – Present",
+      location: "Telford, Shropshire",
       bullets: [
-        "Built and shipped multiple product features from concept to production.",
-        "Worked across the stack with TypeScript, React, and AWS.",
-        "Collaborated closely with cross-functional teams to deliver high-quality software.",
+        "Implemented scalable solutions based on application data extracted and analysed by senior developers.",
+        "Created and implemented automated testing solutions according to client's needs, along with deploying onto cloud infrastructure such as AWS.",
+        "Designed and executed various test plans ranging from integration to system testing.",
+        "Implemented and updated application modules under the direction of the solutions architect during projects.",
+        "Regularly maintained and created technical specifications to include newly designed features for developed applications.",
+        "Mentored new starters, providing knowledge transfers on systems used.",
+      ],
+    },
+    {
+      role: "Full Stack Software Developer",
+      company: "OWO Living",
+      period: "Oct 2018 – Aug 2019",
+      location: "Birmingham, West Midlands",
+      bullets: [
+        "Designed, implemented, and monitored company stock management and sites for continuous improvement in a fast-paced environment all under one holistic software.",
+        "Enhanced coding of CSS and JavaScript, improving user experience score from use of excel spreadsheets to a more appealing software.",
+        "Utilised programming languages such as JavaScript and ReactJS to create and complete client projects according to the specification set beforehand.",
+        "Created a bespoke backend system to maintain company's stock.",
+        "Work independently with efficiency to meet client deadlines on projects.",
+        "Applied the Software Development Life Cycle to keep track of project deadlines to ensure the client knows the progress of the project.",
       ],
     },
   ],
   education: [
     {
-      degree: "B.Sc. in Computer Science",
-      school: "University of California, Berkeley",
-      period: "2015 – 2019",
-      location: "Berkeley, CA",
-      summary: "Focused on software engineering, algorithms, and distributed systems.",
+      degree: "MSc Cyber Security",
+      school: "Coventry University",
+      period: "Nov 2020",
+      location: "Coventry",
+    },
+    {
+      degree: "BSc Computer Science",
+      school: "Coventry University",
+      period: "Nov 2019",
+      location: "Coventry",
     },
   ],
   skills: [
-    { label: "Frontend", value: "React, Next.js, TypeScript, Tailwind CSS" },
-    { label: "Backend", value: "Node.js, Python, Express, Django" },
-    { label: "Databases", value: "PostgreSQL, MongoDB, Redis" },
-    { label: "DevOps", value: "Docker, AWS, CI/CD, GitHub Actions" },
-    { label: "Tools", value: "Git, VS Code, Linux, Figma" },
+    { label: "Languages", value: "JavaScript, Dart, HTML 5 & CSS 3" },
+    { label: "Frameworks", value: "Node JS, NextJS, Flutter" },
+    { label: "Databases", value: "Oracle SQL, PL/SQL" },
+    { label: "Cloud & APIs", value: "AWS, RESTful API implementation" },
+    { label: "Practices", value: "TDD, Agile Scrum, Git Version Control" },
   ],
   projects: [
     {
-      name: "Portfolio OS",
-      description: "A personal productivity and portfolio desktop experience built with Next.js and TypeScript.",
-      tags: ["Next.js", "TypeScript", "Tailwind CSS", "Vercel"],
-      href: "#",
+      name: "Mobile App Development",
+      description:
+        "In my spare time, I develop mobile applications to improve my daily routine and expand my skills. I explore new programming languages and tools, currently focusing on Dart to create small apps and enhance my development techniques.",
+      tags: ["Dart", "Flutter"],
     },
     {
-      name: "Task Manager",
-      description: "A full-stack task management application with real-time collaboration.",
-      tags: ["React", "Node.js", "PostgreSQL", "Socket.io"],
-      href: "#",
+      name: "theNames App",
+      description:
+        "Collaborated in a team to build a Restful API, responsible for implementing a TDD framework to test the API before development and configuring authentication to secure the API endpoints.",
+      tags: ["RESTful API", "TDD", "Authentication"],
     },
   ],
+  certifications: ["ISTQB Foundation Tester", "AWS Cloud Practitioner", "Microsoft Azure Fundamentals"],
+  interests: ["Football", "Gym"],
+  references: "Available upon request",
 };

@@ -8,13 +8,15 @@
 
 export const images = {
   wallpaper: "/wallpapers/sunset-workspace.jpg",
+  /** Pre-blurred copy for the lock screen (cheaper than a live CSS blur filter) */
+  wallpaperBlurred: "/wallpapers/sunset-workspace-blur.jpg",
 
-  avatar: "/placeholders/avatar.jpg",
-  aboutHero: "/placeholders/about-hero.jpg",
+  // Your photo (source: new-design/profile_image.jpeg)
+  avatar: "/profile/avatar.jpg",
+  aboutHero: "/profile/about.jpg",
 
-  projects: {
-    portfolioOs: "/placeholders/project-portfolio-os.jpg",
-  },
+  // Project screenshots: add a path here and set `image` on the project in data/projects.ts
+  projects: {} as Record<string, string>,
 
   writing: {
     hero: "/placeholders/post-hero.jpg",
@@ -25,16 +27,12 @@ export const images = {
   },
 
   coffee: {
-    currentBag: "/placeholders/coffee-bag.jpg",
+    // Illustrated Nkora bag (no product photo exists online)
+    currentBag: "/coffee/nkora-bag.svg",
   },
 
   films: {
     hero: "/placeholders/film-hero.jpg",
-    interstellar: "/placeholders/poster-interstellar.jpg",
-    darkKnight: "/placeholders/poster-dark-knight.jpg",
-    inception: "/placeholders/poster-inception.jpg",
-    spiritedAway: "/placeholders/poster-spirited-away.jpg",
-    dune: "/placeholders/still-dune.jpg",
     pastLives: "/placeholders/still-past-lives.jpg",
     her: "/placeholders/still-her.jpg",
   },
@@ -43,8 +41,6 @@ export const images = {
     building: "/placeholders/now-building.jpg",
     learning: "/placeholders/now-learning.jpg",
     reading: "/placeholders/now-reading.jpg",
-    watching: "/placeholders/now-watching.jpg",
-    drinking: "/placeholders/now-drinking.jpg",
     listening: "/placeholders/now-listening.jpg",
   },
 } as const;

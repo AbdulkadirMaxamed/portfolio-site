@@ -2,9 +2,11 @@
 
 import {
   createContext,
+  memo,
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   type HTMLAttributes,
@@ -12,7 +14,8 @@ import {
   type ReactNode,
   type TouchEvent,
 } from "react";
-import { useWindowManager } from "@/features/window-manager";
+import { flushSync } from "react-dom";
+import { clampPosition, useWindowActions } from "@/features/window-manager";
 import type { WindowState } from "@/features/window-manager";
 
 // ── Chrome context ─────────────────────────────────────────────
@@ -108,15 +111,9 @@ interface WindowProps {
   children: ReactNode;
 }
 
-export function Window({ window: win, isActive, children }: WindowProps) {
+export const Window = memo(function Window({ window: win, isActive, children }: WindowProps) {
   const { closeWindow, removeWindow, focusWindow, minimizeWindow, moveWindow, setAnimationState } =
-    useWindowManager();
-  const dragRef = useRef<{
-    startX: number;
-    startY: number;
-    origX: number;
-    origY: number;
-  } | null>(null);
+    useWindowActions();
   const windowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -152,28 +149,64 @@ export function Window({ window: win, isActive, children }: WindowProps) {
     focusWindow(win.id);
   }, [focusWindow, win.id]);
 
+  // Latest position/size in refs so the drag handlers stay stable between renders
+  const posRef = useRef(win.position);
+  const sizeRef = useRef(win.size);
+  useLayoutEffect(() => {
+    posRef.current = win.position;
+    sizeRef.current = win.size;
+  });
+
+  // Dragging moves the window with the compositor-only `translate` property and
+  // never touches React state until the drag ends — so nothing re-renders while
+  // the pointer moves. The final position is committed once on release.
+  const beginDrag = useCallback(
+    (startX: number, startY: number) => {
+      const el = windowRef.current;
+      if (!el) return null;
+      focusWindow(win.id);
+      const origin = posRef.current;
+      let target = origin;
+      let frame = 0;
+      el.style.willChange = "translate";
+
+      const apply = () => {
+        frame = 0;
+        el.style.translate = `${target.x - origin.x}px ${target.y - origin.y}px`;
+      };
+
+      return {
+        move(clientX: number, clientY: number) {
+          target = clampPosition(origin.x + clientX - startX, origin.y + clientY - startY, sizeRef.current.width);
+          if (!frame) frame = requestAnimationFrame(apply);
+        },
+        end() {
+          cancelAnimationFrame(frame);
+          if (target !== origin) {
+            // Commit synchronously so left/top update in the same frame the translate is cleared
+            flushSync(() => moveWindow(win.id, target.x, target.y));
+          }
+          el.style.translate = "";
+          el.style.willChange = "";
+        },
+      };
+    },
+    [focusWindow, moveWindow, win.id]
+  );
+
   const handleTitleBarMouseDown = useCallback(
     (e: MouseEvent) => {
       if (e.button !== 0 || isInteractive(e.target)) return;
       e.preventDefault();
-      focusWindow(win.id);
-
-      dragRef.current = {
-        startX: e.clientX,
-        startY: e.clientY,
-        origX: win.position.x,
-        origY: win.position.y,
-      };
+      const drag = beginDrag(e.clientX, e.clientY);
+      if (!drag) return;
 
       function onMouseMove(ev: globalThis.MouseEvent) {
-        if (!dragRef.current) return;
-        const dx = ev.clientX - dragRef.current.startX;
-        const dy = ev.clientY - dragRef.current.startY;
-        moveWindow(win.id, dragRef.current.origX + dx, dragRef.current.origY + dy);
+        drag!.move(ev.clientX, ev.clientY);
       }
 
       function onMouseUp() {
-        dragRef.current = null;
+        drag!.end();
         document.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("mouseup", onMouseUp);
       }
@@ -181,34 +214,25 @@ export function Window({ window: win, isActive, children }: WindowProps) {
       document.addEventListener("mousemove", onMouseMove);
       document.addEventListener("mouseup", onMouseUp);
     },
-    [focusWindow, moveWindow, win.id, win.position.x, win.position.y]
+    [beginDrag]
   );
 
   const handleTitleBarTouchStart = useCallback(
     (e: TouchEvent) => {
       const touch = e.touches[0];
       if (!touch || isInteractive(e.target)) return;
-      focusWindow(win.id);
-
-      dragRef.current = {
-        startX: touch.clientX,
-        startY: touch.clientY,
-        origX: win.position.x,
-        origY: win.position.y,
-      };
+      const drag = beginDrag(touch.clientX, touch.clientY);
+      if (!drag) return;
 
       function onTouchMove(ev: globalThis.TouchEvent) {
-        if (!dragRef.current) return;
         const t = ev.touches[0];
         if (!t) return;
         ev.preventDefault();
-        const dx = t.clientX - dragRef.current.startX;
-        const dy = t.clientY - dragRef.current.startY;
-        moveWindow(win.id, dragRef.current.origX + dx, dragRef.current.origY + dy);
+        drag!.move(t.clientX, t.clientY);
       }
 
       function onTouchEnd() {
-        dragRef.current = null;
+        drag!.end();
         document.removeEventListener("touchmove", onTouchMove);
         document.removeEventListener("touchend", onTouchEnd);
       }
@@ -216,7 +240,7 @@ export function Window({ window: win, isActive, children }: WindowProps) {
       document.addEventListener("touchmove", onTouchMove, { passive: false });
       document.addEventListener("touchend", onTouchEnd);
     },
-    [focusWindow, moveWindow, win.id, win.position.x, win.position.y]
+    [beginDrag]
   );
 
   const chrome = useMemo<WindowChrome>(
@@ -261,7 +285,8 @@ export function Window({ window: win, isActive, children }: WindowProps) {
         width: win.size.width,
         height: win.size.height,
         zIndex: win.zIndex,
-        willChange: "transform, opacity",
+        // Only promote to a GPU layer while animating (dragging sets it imperatively)
+        willChange: win.animationState === "open" ? undefined : "transform, opacity",
       }}
       onMouseDown={handleMouseDown}
     >
@@ -275,4 +300,4 @@ export function Window({ window: win, isActive, children }: WindowProps) {
       </WindowChromeContext.Provider>
     </div>
   );
-}
+});

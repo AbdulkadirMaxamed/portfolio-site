@@ -7,6 +7,7 @@ import { Icon } from "./ui/Icon";
 import { AppIcon } from "./AppIcons";
 import { profile } from "@/data/profile";
 import { currentBag } from "@/data/coffee";
+import { images } from "@/data/images";
 
 interface LockScreenProps {
   onUnlock: () => void;
@@ -60,6 +61,14 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
     setTimeout(onUnlock, 500);
   }, [onUnlock, unlocking]);
 
+  // Download + decode the full desktop wallpaper while the lock screen is up,
+  // so unlocking doesn't stall on a large image decode.
+  useEffect(() => {
+    const img = new Image();
+    img.src = images.wallpaper;
+    img.decode?.().catch(() => {});
+  }, []);
+
   useEffect(() => {
     window.addEventListener("keydown", handleUnlock);
     window.addEventListener("mousedown", handleUnlock);
@@ -90,7 +99,7 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
             style={{ boxShadow: "0 12px 40px rgba(0,0,0,0.35)" }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={profile.avatar} alt="" className="w-full h-full object-cover scale-[1.06]" />
+            <img src={profile.avatar} alt="" className="w-full h-full object-cover" />
           </div>
 
           <p className="mt-5 shorter:mt-4 text-[24px] short:text-[22px] font-semibold text-white" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>
@@ -115,7 +124,7 @@ export function LockScreen({ onUnlock }: LockScreenProps) {
           <div>
             <div className="text-[15px] text-white/85">Currently drinking</div>
             <div className="text-[19px] font-semibold text-white mt-0.5">
-              {currentBag.name}, {currentBag.process}
+              {currentBag.name}, {currentBag.origin}
             </div>
           </div>
         </div>

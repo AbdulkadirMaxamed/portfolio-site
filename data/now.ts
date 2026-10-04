@@ -9,7 +9,7 @@ export interface NowCard {
   label: string;
   icon: "laptop" | "graduation" | "book" | "clapper" | "coffee" | "headphones";
   accent: NowAccent;
-  image: string;
+  image?: string;
   title: string;
   description?: string;
   byline?: string;
@@ -62,20 +62,17 @@ export const nowCards: NowCard[] = [
     label: "Watching",
     icon: "clapper",
     accent: "purple",
-    image: images.now.watching,
-    title: "Dune",
-    description: "An epic journey through a distant world.",
-    progress: 60,
-    footnote: "Watching  •  1h 12m left",
+    title: "The X-Men films",
+    description: "Working through the whole saga in release order.",
   },
   {
     id: "drinking",
     label: "Drinking",
     icon: "coffee",
     accent: "amber",
-    image: images.now.drinking,
-    title: "Ethiopia Guji",
-    description: "Washed  •  V60  •  B&W Roasters",
+    image: images.coffee.currentBag,
+    title: "Nkora",
+    description: "Colombian  •  Espresso  •  Barista Express",
     status: "Currently brewing",
   },
   {

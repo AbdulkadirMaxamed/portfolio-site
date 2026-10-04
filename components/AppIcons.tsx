@@ -172,29 +172,6 @@ function NowIcon({ size = 56 }: IconProps) {
   );
 }
 
-function TrashIcon({ size = 56 }: IconProps) {
-  const id = useId();
-  return (
-    <svg width={size} height={size} viewBox="0 0 64 64">
-      <defs>
-        <linearGradient id={`${id}t`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#8fb0d6" />
-          <stop offset="0.5" stopColor="#a9c4e3" />
-          <stop offset="1" stopColor="#7c9dc4" />
-        </linearGradient>
-      </defs>
-      <rect x="26" y="4" width="12" height="6" rx="2" fill="none" stroke="#8aa7c9" strokeWidth="3" />
-      <rect x="10" y="10" width="44" height="8" rx="3" fill="#9cb8da" />
-      <path d="M13 18h38l-3.5 38a4 4 0 0 1-4 3.6h-23a4 4 0 0 1-4-3.6Z" fill={`url(#${id}t)`} />
-      <g fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m28.5 32 3.5-6 3.5 6" />
-        <path d="m38 34.5 3 5.5h-7" />
-        <path d="m26 40h-3.5l3-5.5" />
-      </g>
-    </svg>
-  );
-}
-
 function GridIcon({ size = 56 }: IconProps) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64">
@@ -213,7 +190,6 @@ const iconMap: Record<string, (p: IconProps) => React.ReactElement> = {
   cv: CVIcon,
   terminal: TerminalIcon,
   now: NowIcon,
-  trash: TrashIcon,
   grid: GridIcon,
 };
 

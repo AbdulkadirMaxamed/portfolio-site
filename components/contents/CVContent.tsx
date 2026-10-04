@@ -30,20 +30,21 @@ function Paper() {
   return (
     <article className="bg-[#fdfcf9] text-[#1f2433] pl-[43px] pr-[30px] pt-[30px] pb-[30px] shadow-[0_6px_24px_rgba(0,0,0,0.35)]" style={{ width: PAPER_WIDTH }}>
       {/* Header */}
-      <header className="flex gap-10">
+      <header className="flex gap-8">
         <div className="flex-1">
-          <h1 className="text-[40px] font-bold leading-[1.1] text-[#141a2e] tracking-[-0.01em]">{cv.name}</h1>
+          <h1 className="text-[36px] font-bold leading-[1.1] text-[#141a2e] tracking-[-0.02em] whitespace-nowrap">{cv.name}</h1>
           <p className="mt-[6px] text-[20px] font-semibold" style={{ color: "#2a73d9" }}>
             {cv.title}
           </p>
+          {cv.credentials && <p className="mt-[4px] text-[12.5px] italic text-[#3b4150]">{cv.credentials}</p>}
         </div>
-        <p className="w-[312px] pt-[8px] text-[13.3px] leading-[1.45] text-[#3b4150]">{cv.summary}</p>
+        <p className="w-[300px] shrink-0 pt-[8px] text-[12.8px] leading-[1.45] text-[#3b4150]">{cv.summary}</p>
       </header>
 
-      <div className="mt-[26px] -mr-[18px] flex flex-wrap items-center gap-x-[14px] gap-y-2 text-[10.6px] tracking-[-0.01em] text-[#2a3040] whitespace-nowrap">
+      <div className="mt-[26px] -mr-[18px] flex flex-wrap items-center gap-x-[22px] gap-y-2 text-[10.8px] tracking-[-0.01em] text-[#2a3040] whitespace-nowrap">
         {cv.contacts.map((c) => (
-          <span key={c.text} className="flex items-center gap-[8px]">
-            <Icon name={contactIcon[c.kind]} size={16} className="text-[#1f2433]" />
+          <span key={c.text} className="flex items-center gap-[7px]">
+            <Icon name={contactIcon[c.kind]} size={15} className="text-[#1f2433]" />
             {c.href ? (
               <a href={c.href} target="_blank" rel="noreferrer" className="hover:underline">
                 {c.text}
@@ -98,12 +99,12 @@ function Paper() {
                   <span className="text-[12.3px] text-[#3b4150]">{ed.school}</span>
                   <span className="text-[10px] text-[#6b7180]">{ed.location}</span>
                 </div>
-                <p className="mt-[14px] text-[12px] leading-[1.45] text-[#2a3040]">{ed.summary}</p>
+                {ed.summary && <p className="mt-[14px] text-[12px] leading-[1.45] text-[#2a3040]">{ed.summary}</p>}
               </div>
             ))}
           </section>
 
-          <section className="mt-[44px]">
+          <section className="mt-[34px]">
             <SectionTitle icon="settings-solid">Technical Skills</SectionTitle>
             <dl className="mt-[14px] pl-[6px] grid grid-cols-[80px_1fr] gap-y-[9px] text-[11.5px] tracking-[-0.01em]">
               {cv.skills.map((s) => (
@@ -114,6 +115,24 @@ function Paper() {
               ))}
             </dl>
           </section>
+
+          {cv.certifications.length > 0 && (
+            <section className="mt-[34px]">
+              <SectionTitle icon="bookmark">Certifications</SectionTitle>
+              <ul className="mt-[12px] pl-[29px] list-disc text-[12px] leading-[1.45] text-[#2a3040] space-y-[3px] marker:text-[#1f2433]">
+                {cv.certifications.map((c) => (
+                  <li key={c}>{c}</li>
+                ))}
+              </ul>
+            </section>
+          )}
+
+          {cv.interests.length > 0 && (
+            <section className="mt-[34px]">
+              <SectionTitle icon="heart-solid">Interests</SectionTitle>
+              <p className="mt-[12px] pl-[11px] text-[12px] text-[#2a3040]">{cv.interests.join(" · ")}</p>
+            </section>
+          )}
         </div>
       </div>
 
@@ -125,7 +144,7 @@ function Paper() {
           {cv.projects.map((p) => (
             <div key={p.name}>
               <div className="text-[13.3px] font-semibold text-[#141a2e]">{p.name}</div>
-              <p className="mt-[2px] text-[11.8px] leading-[1.45] text-[#2a3040] max-w-[250px]">{p.description}</p>
+              <p className="mt-[2px] text-[11.8px] leading-[1.45] text-[#2a3040]">{p.description}</p>
               <div className="mt-[9px] flex items-center gap-[8px] flex-wrap">
                 {p.tags.map((t) => (
                   <span key={t} className="h-[22px] px-[9px] rounded-[4px] flex items-center text-[10.5px] text-[#2a3040]" style={{ background: "#eef0f3" }}>
@@ -142,6 +161,10 @@ function Paper() {
           ))}
         </div>
       </section>
+
+      {cv.references && (
+        <p className="mt-[26px] pt-[12px] border-t border-[#e1e3e8] text-[11px] text-[#6b7180]">References: {cv.references}</p>
+      )}
     </article>
   );
 }
@@ -161,7 +184,7 @@ export function CVContent() {
   const scale = zoom / 100;
 
   return (
-    <div className="flex flex-col h-full os-glass" style={{ background: "rgba(29, 28, 36, 0.985)" }}>
+    <div className="flex flex-col h-full" style={{ background: "rgb(29, 28, 36)" }}>
       <DragRegion className="h-[56px] shrink-0 flex items-center pl-[18px]">
         <TrafficLights className="mr-[26px]" />
         <span className="w-[38px] h-[38px] rounded-[8px] flex items-center justify-center" style={{ background: "rgba(255,255,255,0.06)" }}>
@@ -184,7 +207,7 @@ export function CVContent() {
             className="h-[44px] text-[15px] !gap-[18px]"
             icon={<Icon name="printer" size={22} strokeWidth={1.6} />}
             label="Print"
-            onClick={() => window.open(cv.pdfPath, "_blank")}
+            onClick={() => window.open(`${cv.pdfPath}${cv.pdfPath.includes("?") ? "&" : "?"}inline=1`, "_blank")}
           />
         </aside>
 

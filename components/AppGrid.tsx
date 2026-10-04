@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { useWindowManager } from "@/features/window-manager";
+import { useWindowActions } from "@/features/window-manager";
 import { dockApps } from "@/lib/apps";
 import { AppIcon } from "./AppIcons";
 
 /** GNOME-style "Show Applications" overlay (dock grid button / Activities) */
 export function AppGrid({ onClose }: { onClose: () => void }) {
-  const { openWindow } = useWindowManager();
+  const { openWindow } = useWindowActions();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {

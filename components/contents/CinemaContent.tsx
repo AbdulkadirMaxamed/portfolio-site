@@ -7,15 +7,15 @@ import { Icon } from "../ui/Icon";
 import { Img } from "../ui/Img";
 import { Stars } from "../ui/Stars";
 import { SidebarItem } from "../ui/SidebarItem";
-import { cinemaHeroes, favouriteFilms, recentlyWatched, watchlist, type Film } from "@/data/films";
+import { cinemaHeroes, favouriteFilms, currentlyWatching, watchlist, type Film } from "@/data/films";
 
-type Section = "discover" | "favourites" | "watchlist" | "recent";
+type Section = "discover" | "favourites" | "watchlist" | "watching";
 
 const nav: { id: Section; label: string; icon: string }[] = [
   { id: "discover", label: "Discover", icon: "compass" },
   { id: "favourites", label: "Favourites", icon: "heart-solid" },
   { id: "watchlist", label: "Watchlist", icon: "bookmark" },
-  { id: "recent", label: "Recently Watched", icon: "clock-solid" },
+  { id: "watching", label: "Currently Watching", icon: "clock-solid" },
 ];
 
 function SectionHeader({ title, onSeeAll }: { title: string; onSeeAll?: () => void }) {
@@ -111,7 +111,7 @@ export function CinemaContent() {
   const stillCols = mainWidth >= 560 ? "grid-cols-3" : "grid-cols-2";
 
   return (
-    <div className="flex h-full os-glass" style={{ background: "var(--os-surface)" }}>
+    <div className="flex h-full" style={{ background: "var(--os-surface)" }}>
       <DragRegion
         className={`flex flex-col shrink-0 ${rail ? "w-[80px] px-[10px]" : "w-[201px] pl-[15px] pr-[9px]"}`}
         style={{ background: "rgba(48, 28, 28, 0.5)" }}
@@ -145,15 +145,15 @@ export function CinemaContent() {
                 <SectionHeader title="Favourite Films" onSeeAll={() => setSection("favourites")} />
               </div>
               <div className={`mt-[12px] grid ${posterCols} gap-[19px]`}>
-                {favouriteFilms.map((f) => (
+                {favouriteFilms.slice(0, 4).map((f) => (
                   <Poster key={f.id} film={f} />
                 ))}
               </div>
               <div className="mt-[14px]">
-                <SectionHeader title="Recently Watched" onSeeAll={() => setSection("recent")} />
+                <SectionHeader title="Currently Watching" onSeeAll={() => setSection("watching")} />
               </div>
               <div className={`mt-[8px] grid ${stillCols} gap-[21px]`}>
-                {recentlyWatched.map((f) => (
+                {currentlyWatching.slice(0, 3).map((f) => (
                   <Still key={f.id} film={f} />
                 ))}
               </div>
@@ -171,7 +171,7 @@ export function CinemaContent() {
               </div>
             ) : (
               <div className={`mt-[14px] grid ${stillCols} gap-[21px]`}>
-                {(section === "watchlist" ? watchlist : recentlyWatched).map((f) => (
+                {(section === "watchlist" ? watchlist : currentlyWatching).map((f) => (
                   <Still key={f.id} film={f} />
                 ))}
               </div>

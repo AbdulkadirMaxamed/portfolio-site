@@ -135,7 +135,7 @@ export function NowContent() {
   const dateLabel = now?.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }) ?? "";
 
   return (
-    <div className="flex flex-col h-full os-glass" style={{ background: "var(--os-surface)" }}>
+    <div className="flex flex-col h-full" style={{ background: "var(--os-surface)" }}>
       <DragRegion className="h-[56px] shrink-0 flex items-center">
         <div className={`shrink-0 ${rail ? "w-[80px] flex justify-center" : "w-[172px] pl-[21px]"}`}>
           <TrafficLights />

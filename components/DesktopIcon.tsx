@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef } from "react";
-import { useWindowManager } from "@/features/window-manager";
+import { useWindowActions } from "@/features/window-manager";
 import type { AppDefinition } from "@/lib/apps";
 import { AppIcon } from "./AppIcons";
 
@@ -12,7 +12,7 @@ interface DesktopIconProps {
 }
 
 export function DesktopIcon({ app, selected, onSelect }: DesktopIconProps) {
-  const { openWindow } = useWindowManager();
+  const { openWindow } = useWindowActions();
   const lastTapRef = useRef(0);
 
   const handleOpen = useCallback(() => {

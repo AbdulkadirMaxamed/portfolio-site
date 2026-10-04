@@ -103,7 +103,7 @@ export function BlogContent() {
   }
 
   return (
-    <div className="flex h-full os-glass" style={{ background: "var(--os-surface)" }}>
+    <div className="flex h-full" style={{ background: "var(--os-surface)" }}>
       {/* Sidebar */}
       <DragRegion
         className={`flex flex-col shrink-0 ${rail ? "w-[80px] px-[10px]" : "w-[234px] px-[10px]"}`}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useReducer, useCallback, useEffect, type ReactNode } from "react";
+import { createContext, useReducer, useCallback, useEffect, useMemo, type ReactNode } from "react";
 import type {
   WindowId,
   WindowManagerState,
@@ -62,7 +62,8 @@ function keepInside(pos: { x: number; y: number }, size: WindowSize): { x: numbe
   };
 }
 
-function clampPosition(
+/** Keep a dragged window reachable. Exported so drags can be clamped without touching state. */
+export function clampPosition(
   x: number,
   y: number,
   width: number
@@ -277,8 +278,7 @@ function windowManagerReducer(
   }
 }
 
-export interface WindowManagerContextValue {
-  state: WindowManagerState;
+export interface WindowManagerActions {
   openWindow: (id: WindowId, title: string, icon: string, contentType: string, size?: Partial<WindowSize>) => void;
   closeWindow: (id: WindowId) => void;
   removeWindow: (id: WindowId) => void;
@@ -289,7 +289,16 @@ export interface WindowManagerContextValue {
   setAnimationState: (id: WindowId, animationState: WindowAnimationState) => void;
 }
 
+export interface WindowManagerContextValue extends WindowManagerActions {
+  state: WindowManagerState;
+}
+
 export const WindowManagerContext = createContext<WindowManagerContextValue | null>(null);
+/**
+ * Actions only — these never change, so components that just open/close/focus
+ * windows don't re-render whenever window state changes.
+ */
+export const WindowActionsContext = createContext<WindowManagerActions | null>(null);
 
 export function WindowManagerProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(windowManagerReducer, initialState);
@@ -362,21 +371,24 @@ export function WindowManagerProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const actions = useMemo<WindowManagerActions>(
+    () => ({
+      openWindow,
+      closeWindow,
+      removeWindow,
+      focusWindow,
+      minimizeWindow,
+      restoreWindow,
+      moveWindow,
+      setAnimationState,
+    }),
+    [openWindow, closeWindow, removeWindow, focusWindow, minimizeWindow, restoreWindow, moveWindow, setAnimationState]
+  );
+  const value = useMemo<WindowManagerContextValue>(() => ({ state, ...actions }), [state, actions]);
+
   return (
-    <WindowManagerContext.Provider
-      value={{
-        state,
-        openWindow,
-        closeWindow,
-        removeWindow,
-        focusWindow,
-        minimizeWindow,
-        restoreWindow,
-        moveWindow,
-        setAnimationState,
-      }}
-    >
-      {children}
-    </WindowManagerContext.Provider>
+    <WindowActionsContext.Provider value={actions}>
+      <WindowManagerContext.Provider value={value}>{children}</WindowManagerContext.Provider>
+    </WindowActionsContext.Provider>
   );
 }

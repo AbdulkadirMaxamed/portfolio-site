@@ -74,11 +74,11 @@ function Help() {
 
 function Coffee() {
   const rows: [string, string, string][] = [
-    ["bean", "Bean", currentBag.name],
-    ["dripper", "Method", currentBrew.methodLong],
-    ["scale", "Dose", `${currentBrew.coffee} coffee / ${currentBrew.water} water`],
-    ["thermometer", "Temp", currentBrew.temperature],
-    ["timer", "Brew Time", currentBrew.time],
+    ["bean", "Bean", `${currentBag.name} (${currentBag.origin})`],
+    ["cup", "Machine", currentBrew.machine],
+    ["scale", "Dose", `${currentBrew.dose} coffee`],
+    ["settings", "Grind", currentBrew.grind],
+    ["timer", "Shot Time", currentBrew.shotTime],
     ["leaf", "Tasting Notes", currentBag.tastingNotes.map((n) => n.label).join(" · ")],
   ];
   return (

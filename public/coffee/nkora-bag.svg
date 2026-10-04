@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="40 80 520 631" width="520" height="631">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5a3a2c"/>
+      <stop offset="0.55" stop-color="#8a5a40"/>
+      <stop offset="1" stop-color="#b98058"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.72" cy="0.22" r="0.55">
+      <stop offset="0" stop-color="#ffd9a8" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#ffd9a8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="table" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a4a2e"/>
+      <stop offset="1" stop-color="#4a2a1a"/>
+    </linearGradient>
+    <linearGradient id="bag" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d9658f"/>
+      <stop offset="0.18" stop-color="#f29bbb"/>
+      <stop offset="0.55" stop-color="#f7b3cb"/>
+      <stop offset="0.85" stop-color="#ec8fb1"/>
+      <stop offset="1" stop-color="#c9577f"/>
+    </linearGradient>
+    <linearGradient id="bagShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#5a1830" stop-opacity="0.28"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#fff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7c6a0"/>
+      <stop offset="1" stop-color="#f59f8a"/>
+    </linearGradient>
+    <radialGradient id="bean" cx="0.35" cy="0.3" r="0.8">
+      <stop offset="0" stop-color="#7a4426"/>
+      <stop offset="1" stop-color="#3a1d0e"/>
+    </radialGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="14"/>
+    </filter>
+    <clipPath id="labelClip">
+      <rect x="196" y="300" width="208" height="250" rx="14"/>
+    </clipPath>
+  </defs>
+
+  <!-- Backdrop -->
+  <rect width="600" height="728" fill="url(#wall)"/>
+  <rect width="600" height="728" fill="url(#glow)"/>
+  <!-- blurred plant -->
+  <g filter="url(#soft)" opacity="0.55">
+    <ellipse cx="70" cy="300" rx="55" ry="120" fill="#2f3a24"/>
+    <ellipse cx="120" cy="230" rx="40" ry="90" fill="#3d4a2c"/>
+    <ellipse cx="40" cy="420" rx="40" ry="70" fill="#2a3320"/>
+  </g>
+  <!-- blurred lamp light -->
+  <circle cx="520" cy="160" r="60" fill="#ffe2b8" opacity="0.5" filter="url(#soft)"/>
+
+  <!-- Table -->
+  <rect y="560" width="600" height="168" fill="url(#table)"/>
+  <path d="M0 600h600M0 650h600M0 700h600" stroke="#000" stroke-opacity="0.12" stroke-width="2"/>
+  <rect y="556" width="600" height="8" fill="#a06a45" opacity="0.6"/>
+
+  <!-- Bag shadow -->
+  <ellipse cx="305" cy="628" rx="170" ry="22" fill="#000" opacity="0.45" filter="url(#shadow)"/>
+
+  <!-- Bag body (stand-up pouch) -->
+  <path d="M160 150 L440 150 L452 610 Q300 628 148 610 Z" fill="url(#bag)"/>
+  <path d="M160 150 L440 150 L452 610 Q300 628 148 610 Z" fill="url(#bagShade)"/>
+  <!-- side gusset folds -->
+  <path d="M175 160 L168 600" stroke="#b8466f" stroke-opacity="0.45" stroke-width="3"/>
+  <path d="M425 160 L432 600" stroke="#b8466f" stroke-opacity="0.45" stroke-width="3"/>
+  <!-- gloss -->
+  <path d="M250 160 L290 160 L282 600 L238 600 Z" fill="url(#gloss)"/>
+
+  <!-- Crimped top seal -->
+  <path d="M156 118 L444 118 L444 152 L156 152 Z" fill="#e47fa4"/>
+  <path d="M156 118 L444 118 L444 126 L156 126 Z" fill="#f6b1c9"/>
+  <path d="M156 152 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8 l9 -8 l9 8" fill="none" stroke="#c75a83" stroke-width="2"/>
+  <!-- tin tie -->
+  <rect x="140" y="172" width="320" height="12" rx="4" fill="#c9a76a"/>
+  <rect x="140" y="172" width="320" height="4" rx="2" fill="#efd9a8"/>
+
+  <!-- Label -->
+  <rect x="190" y="294" width="220" height="262" rx="18" fill="#000" opacity="0.12" filter="url(#soft)"/>
+  <rect x="196" y="300" width="208" height="250" rx="14" fill="#fbf3ea"/>
+  <g clip-path="url(#labelClip)">
+    <!-- illustrated Colombian landscape -->
+    <rect x="196" y="300" width="208" height="110" fill="url(#sky)"/>
+    <circle cx="350" cy="350" r="22" fill="#fff1d6"/>
+    <path d="M196 392 L240 340 L268 372 L300 326 L340 380 L366 352 L404 392 L404 410 L196 410 Z" fill="#c4657e"/>
+    <path d="M196 402 L232 372 L262 396 L296 364 L330 398 L372 374 L404 402 L404 410 L196 410 Z" fill="#8f3f5c"/>
+    <!-- coffee plant rows -->
+    <rect x="196" y="404" width="208" height="12" fill="#5f7a3e"/>
+    <g fill="#d4404f">
+      <circle cx="222" cy="408" r="3"/><circle cx="252" cy="410" r="3"/><circle cx="286" cy="407" r="3"/>
+      <circle cx="318" cy="410" r="3"/><circle cx="350" cy="408" r="3"/><circle cx="380" cy="410" r="3"/>
+    </g>
+  </g>
+  <text x="300" y="456" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="40" font-weight="800" letter-spacing="6" fill="#3a1d24">NKORA</text>
+  <text x="300" y="482" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" letter-spacing="4" fill="#c4507a">COLOMBIA</text>
+  <line x1="236" y1="496" x2="364" y2="496" stroke="#e6c9b8" stroke-width="1.5"/>
+  <text x="300" y="516" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="8.6" font-weight="600" letter-spacing="0.6" fill="#6b4a4a">HONEY · CHOCOLATE · ROASTED NUTS</text>
+  <text x="300" y="536" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="9" font-weight="700" letter-spacing="4" fill="#9a7a72">ESPRESSO</text>
+
+  <!-- Beans on the table -->
+  <g>
+    <g transform="translate(110 640) rotate(-25)"><ellipse rx="16" ry="11" fill="url(#bean)"/><path d="M-12 0 q12 -6 24 0" stroke="#24110a" stroke-width="2" fill="none"/></g>
+    <g transform="translate(150 668) rotate(15)"><ellipse rx="16" ry="11" fill="url(#bean)"/><path d="M-12 0 q12 6 24 0" stroke="#24110a" stroke-width="2" fill="none"/></g>
+    <g transform="translate(82 684) rotate(40)"><ellipse rx="15" ry="10" fill="url(#bean)"/><path d="M-11 0 q11 -5 22 0" stroke="#24110a" stroke-width="2" fill="none"/></g>
+    <g transform="translate(470 650) rotate(30)"><ellipse rx="16" ry="11" fill="url(#bean)"/><path d="M-12 0 q12 -6 24 0" stroke="#24110a" stroke-width="2" fill="none"/></g>
+    <g transform="translate(505 682) rotate(-10)"><ellipse rx="15" ry="10" fill="url(#bean)"/><path d="M-11 0 q11 6 22 0" stroke="#24110a" stroke-width="2" fill="none"/></g>
+    <g transform="translate(440 690) rotate(70)"><ellipse rx="14" ry="10" fill="url(#bean)"/><path d="M-10 0 q10 -5 20 0" stroke="#24110a" stroke-width="2" fill="none"/></g>
+  </g>
+</svg>

@@ -36,8 +36,8 @@ export interface Profile {
 }
 
 export const profile: Profile = {
-  name: "Your Name",
-  role: "Full-Stack Developer",
+  name: "Abdulkadir Maxamed",
+  role: "Software Engineer",
   lockTagline: "Full-stack developer",
   avatar: images.avatar,
   about: {
@@ -49,14 +49,23 @@ export const profile: Profile = {
     url: "https://portfolio.local/about",
   },
   currently: [
-    { label: "Currently drinking", title: "Ethiopia Guji", subtitle: "Washed · V60", icon: "coffee" },
-    { label: "Currently building", title: "Something cool", subtitle: "(ask me about it!)", icon: "laptop" },
+    { label: "Currently drinking", title: "Nkora", subtitle: "Colombian · Espresso", icon: "coffee" },
+    { label: "Currently building", title: "Hooyo's Recipe", subtitle: "(ask me about it!)", icon: "laptop" },
     { label: "Currently learning", title: "System design", subtitle: "and distributed systems", icon: "book" },
   ],
-  email: "you@example.com",
+  email: "abdulkadir.q12@gmail.com",
   socials: [
-    { kind: "email", label: "Email", href: "mailto:you@example.com", display: "you@example.com" },
-    { kind: "github", label: "GitHub", href: "https://github.com/you", display: "github.com/you" },
-    { kind: "linkedin", label: "LinkedIn", href: "https://linkedin.com/in/you", display: "linkedin.com/in/you" },
+    {
+      kind: "github",
+      label: "GitHub",
+      href: "https://github.com/AbdulkadirMaxamed",
+      display: "github.com/AbdulkadirMaxamed",
+    },
+    {
+      kind: "linkedin",
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/in/abdulkadir-maxamed/",
+      display: "linkedin.com/in/abdulkadir-maxamed",
+    },
   ],
 };

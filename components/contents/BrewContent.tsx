@@ -7,7 +7,7 @@ import { Icon } from "../ui/Icon";
 import { Img } from "../ui/Img";
 import { Stars } from "../ui/Stars";
 import { SidebarItem } from "../ui/SidebarItem";
-import { coffeeGear, coffeeHistory, coffeeMethods, coffeeNotes, currentBag, currentBrew } from "@/data/coffee";
+import { brewStats, coffeeGear, coffeeHistory, coffeeMethods, coffeeNotes, currentBag, currentBrew } from "@/data/coffee";
 
 type Section = "current" | "history" | "method" | "gear" | "notes";
 
@@ -22,15 +22,10 @@ const nav: { id: Section; label: string; icon: string }[] = [
 const card = "rounded-[14px] border";
 const cardStyle = { background: "#faf6f0", borderColor: "#efe8de", boxShadow: "0 1px 2px rgba(60,40,20,0.04)" };
 
-function Current({ row }: { row: boolean }) {
-  const brewStats = [
-    { icon: "dripper", value: currentBrew.method, label: "Brew method" },
-    { icon: "bean", value: currentBrew.coffee, label: "Coffee" },
-    { icon: "droplet", value: currentBrew.water, label: "Water" },
-    { icon: "thermometer", value: currentBrew.temperature, label: "Temperature" },
-    { icon: "timer", value: currentBrew.time, label: "Brew time" },
-  ];
+// Static class names so Tailwind generates them
+const statCols: Record<number, string> = { 2: "grid-cols-2", 3: "grid-cols-3", 4: "grid-cols-4", 5: "grid-cols-5", 6: "grid-cols-6" };
 
+function Current({ row }: { row: boolean }) {
   return (
     <>
       <section className={`${card} p-[2px] flex ${row ? "flex-row" : "flex-col"}`} style={cardStyle}>
@@ -45,12 +40,12 @@ function Current({ row }: { row: boolean }) {
           </div>
           <div className="mt-[12px] border-t" style={{ borderColor: "#ebe4da" }} />
           <dl className="mt-[14px] grid grid-cols-[134px_1fr] gap-y-[13px] items-center">
-            <dt className="text-[16px] text-[#6b6560]">Roaster</dt>
-            <dd className="text-[17px] text-[#1d1b20]">{currentBag.roaster}</dd>
-            <dt className="text-[16px] text-[#6b6560]">Process</dt>
-            <dd className="text-[17px] text-[#1d1b20]">{currentBag.process}</dd>
-            <dt className="text-[16px] text-[#6b6560]">Variety</dt>
-            <dd className="text-[17px] text-[#1d1b20]">{currentBag.variety}</dd>
+            {currentBag.details.map((d) => (
+              <div key={d.label} className="contents">
+                <dt className="text-[16px] text-[#6b6560]">{d.label}</dt>
+                <dd className="text-[17px] text-[#1d1b20]">{d.value}</dd>
+              </div>
+            ))}
             <dt className="text-[16px] text-[#6b6560] pt-[10px]">Tasting Notes</dt>
             <dd className="flex flex-wrap gap-[7px] pt-[10px]">
               {currentBag.tastingNotes.map((n) => (
@@ -64,20 +59,27 @@ function Current({ row }: { row: boolean }) {
                 </span>
               ))}
             </dd>
-            <dt className="text-[16px] text-[#6b6560] pt-[18px]">Rating</dt>
-            <dd className="pt-[18px]">
-              <Stars rating={currentBag.rating} size={25} emptyColor="#6b6560" gap={6} />
-            </dd>
+            {currentBag.rating !== undefined && (
+              <>
+                <dt className="text-[16px] text-[#6b6560] pt-[18px]">Rating</dt>
+                <dd className="pt-[18px]">
+                  <Stars rating={currentBag.rating} size={25} emptyColor="#6b6560" gap={6} />
+                </dd>
+              </>
+            )}
           </dl>
         </div>
       </section>
 
       <section className={`${card} mt-[16px] px-[24px] pt-[18px] pb-[22px]`} style={cardStyle}>
         <div className="flex items-center justify-between">
-          <h3 className="text-[19.5px] font-semibold text-[#1d1b20]">My Brew</h3>
+          <h3 className="text-[19.5px] font-semibold text-[#1d1b20]">
+            My Brew
+            <span className="ml-3 text-[15px] font-normal text-[#6b6560]">{currentBrew.machine}</span>
+          </h3>
           <Icon name="more-horizontal" size={22} className="text-[#6b6560]" />
         </div>
-        <div className="mt-[16px] grid grid-cols-5">
+        <div className={`mt-[16px] grid ${statCols[brewStats.length] ?? "grid-cols-4"}`}>
           {brewStats.map((s, i) => (
             <div key={s.label} className={`flex flex-col items-center ${i > 0 ? "border-l" : ""}`} style={{ borderColor: "#e9e1d6" }}>
               <Icon name={s.icon} size={32} strokeWidth={1.5} className="text-[#2b2626]" />
@@ -91,7 +93,7 @@ function Current({ row }: { row: boolean }) {
   );
 }
 
-function SimpleList({ title, items }: { title: string; items: { primary: string; secondary?: string; rating?: number }[] }) {
+function SimpleList({ title, items }: { title: string; items: { primary: string; secondary?: string; detail?: string; rating?: number }[] }) {
   return (
     <section className={`${card} px-[24px] py-[20px]`} style={cardStyle}>
       <h2 className="text-[22px] font-bold text-[#1d1b20]">{title}</h2>
@@ -101,6 +103,7 @@ function SimpleList({ title, items }: { title: string; items: { primary: string;
             <div>
               <div className="text-[17px] font-medium text-[#1d1b20]">{it.primary}</div>
               {it.secondary && <div className="text-[15px] text-[#6b6560]">{it.secondary}</div>}
+              {it.detail && <div className="mt-[2px] text-[14px] text-[#8a8178]">{it.detail}</div>}
             </div>
             {it.rating !== undefined && <Stars rating={it.rating} size={18} emptyColor="#b5aca3" />}
           </li>
@@ -128,7 +131,7 @@ export function BrewContent() {
 
       <div className="flex flex-1 min-h-0">
         <aside
-          className={`shrink-0 pt-[16px] space-y-[8px] os-glass ${rail ? "w-[64px] px-[9px]" : "w-[201px] px-[9px]"}`}
+          className={`shrink-0 pt-[16px] space-y-[8px] ${rail ? "w-[64px] px-[9px]" : "w-[201px] px-[9px]"}`}
           style={{ background: "var(--os-sidebar)" }}
         >
           {nav.map((n) => (
@@ -149,7 +152,12 @@ export function BrewContent() {
           {section === "history" && (
             <SimpleList
               title="History"
-              items={coffeeHistory.map((c) => ({ primary: c.name, secondary: `${c.roaster} · ${c.process}`, rating: c.rating }))}
+              items={coffeeHistory.map((c) => ({
+                primary: c.name,
+                secondary: [c.roaster, c.origin].filter(Boolean).join(" · "),
+                detail: [c.tastingNotes.join(", "), c.grind && `Grind ${c.grind}`].filter(Boolean).join("  ·  "),
+                rating: c.rating,
+              }))}
             />
           )}
           {section === "method" && (

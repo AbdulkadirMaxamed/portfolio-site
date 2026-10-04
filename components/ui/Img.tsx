@@ -14,5 +14,5 @@ export function Img({ src, alt = "", className = "" }: { src?: string; alt?: str
       />
     );
   }
-  return <img src={src} alt={alt} className={`object-cover ${className}`} draggable={false} />;
+  return <img src={src} alt={alt} className={`object-cover ${className}`} draggable={false} loading="lazy" decoding="async" />;
 }

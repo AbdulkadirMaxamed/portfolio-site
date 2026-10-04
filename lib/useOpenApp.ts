@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback } from "react";
-import { useWindowManager } from "@/features/window-manager";
+import { useWindowActions } from "@/features/window-manager";
 import { apps } from "./apps";
 
 /** Open (or focus) another app by id — used for cross-app links like "See my work". */
 export function useOpenApp() {
-  const { openWindow } = useWindowManager();
+  const { openWindow } = useWindowActions();
   return useCallback(
     (id: keyof typeof apps | string) => {
       const app = apps[id];
